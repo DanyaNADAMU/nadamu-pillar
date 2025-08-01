@@ -1,0 +1,9 @@
+name: NadamuPillar
+version: '1.0'
+main: space.nadamu.nadamuPillar.NadamuPillar
+api-version: '1.21'
+prefix: NadamuPillar
+load: STARTUP
+authors: [ nadamu ]
+description: Pillars Of Fortune
+website: nadamu.space
