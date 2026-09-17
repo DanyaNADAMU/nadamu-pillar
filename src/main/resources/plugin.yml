@@ -1,9 +1,12 @@
 name: NadamuPillar
-version: '1.0'
-main: space.nadamu.nadamuPillar.NadamuPillar
+version: '${version}'
+main: space.nadamu.nadamupillar.PillarsPlugin
 api-version: '1.21'
-prefix: NadamuPillar
-load: STARTUP
+prefix: PillarsOfFortune
 authors: [ nadamu ]
-description: Pillars Of Fortune
-website: nadamu.space
+description: Pillars of Fortune minigame
+commands:
+  pillars:
+    description: Main command for Pillars of Fortune
+    permission: nadamupillar.admin
+    usage: /pillars <start|stop|forcenext>

@@ -1,0 +1,46 @@
+# ==========================================================
+# Classic Neon Map Configuration (CubeCraft style)
+# ==========================================================
+name: "<gradient:blue:light_purple>Classic Neon</gradient>"
+world: "world"
+
+geometry:
+  # Base Y level for the pillar surfaces
+  y-level: 100
+  # Distance in blocks between adjacent player pillars
+  distance-between-players: 14.0
+
+pillars:
+  # Size of player pillar (e.g. 3 for 3x3)
+  size: 3
+  # Depth of pillar downward from surface
+  depth: 6
+  # Surface block pattern (WorldEdit-like percentages or single material)
+  surface: "60%light_blue_concrete,40%cyan_concrete"
+  # Body block pattern
+  body: "70%cyan_concrete,30%blue_concrete"
+  # Bottom tip block
+  bottom: "OBSIDIAN"
+
+center:
+  # Generate central island
+  enabled: true
+  # Radius in blocks
+  radius: 6.0
+  # Vertical offset relative to pillar height (e.g. -2 means 2 blocks lower than pillars)
+  y-offset: -2
+  # Fill pattern of the center platform
+  pattern: "50%magenta_concrete,50%purple_concrete"
+  rim:
+    # Outer decorative rim
+    enabled: true
+    pattern: "70%yellow_concrete,30%gold_block"
+
+features:
+  # List of allowed disaster IDs on this map
+  allowed-disasters:
+    - "meteor_shower"
+    - "anvil_rain"
+    - "ghast_assault"
+    - "wind_charge_storm"
+    - "levitation_wave"

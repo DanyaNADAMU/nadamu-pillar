@@ -1,0 +1,25 @@
+# ==========================================================
+# Pillars of Fortune (nadamu-pillar) Configuration
+# ==========================================================
+
+# Game settings
+game:
+  # Minimum number of players to start the match
+  min-players: 2
+  # Countdown before match begins in seconds
+  countdown-seconds: 5
+  # Duration in seconds for winner to celebrate before arena resets
+  celebration-seconds: 7
+  # Interval in seconds between giving random loot to players
+  loot-interval-seconds: 10
+  # Interval in seconds between random arena disasters
+  disaster-interval-seconds: 30
+  # Warning countdown in seconds before a disaster strikes
+  disaster-warning-seconds: 5
+
+# World settings
+world:
+  # Default void world name
+  name: "world"
+  # Height at which player drops are intercepted as fatal falls
+  void-death-y: -10
