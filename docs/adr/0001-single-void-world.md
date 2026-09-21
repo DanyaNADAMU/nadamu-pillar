@@ -1,19 +1,19 @@
-# ADR-0001: Использование единого дефолтного пустотного мира
+# ADR-0001: Single Default Void World Architecture
 
-## Контекст и проблема
-Создание дополнительных миров (через `WorldCreator` или разделение на Nether/End) усложняет архитектуру, требует координации мультимировых телепортов, увеличивает потребление памяти и создает риски утечек при выгрузке.
+## Context and Problem
+Creating dynamic temporary worlds (via `WorldCreator` or multi-dimension splits like Nether/End) complicates architecture, requires coordinating cross-world teleports, increases memory footprint, and introduces risks of chunk/memory leaks upon unloading.
 
-## Рассмотренные альтернативы
-1. Динамическое создание миров под каждый матч.
-2. Использование трех постоянных миров (Overworld, Nether, End).
-3. Использование одного-единственного постоянного мира (`world`).
+## Considered Options
+1. **Dynamic World Creation per Match**: Generate an isolated world for each match and delete it afterwards.
+2. **Three Persistent Dimensions**: Maintain separate Overworld, Nether, and End worlds.
+3. **Single Persistent Void World**: Run all phases in the default `world`.
 
-## Выбранное решение
-Использовать ровно **один мир — дефолтный `world`** в режиме пустоты (Void / Flat):
-- Все фазы игры (`WAITING`, `STARTING`, `ACTIVE`, `ENDING`) происходят в этом мире.
-- Игроки при подключении сразу становятся спектаторами на арене.
-- Разделение на измерения исключено, так как для динамичной мини-игры на столбах механики других измерений не несут принципиальной ценности, но усложняют стек.
+## Decision
+Use **exactly one persistent void world — the default `world`**:
+- All game states (`WAITING`, `STARTING`, `ACTIVE`, `ENDING`) execute within this single world.
+- Joining players immediately spawn as spectators above the arena center.
+- Dimensions like Nether and End are disabled in `server.properties` and `bukkit.yml`.
 
-## Последствия
-- **Плюсы**: Идеальная стабильность TPS, нулевые затраты памяти на лишние миры, мгновенные локальные телепорты, простейшая конфигурация сервера.
-- **Ограничения**: В один момент времени на сервере проходит ровно один матч.
+## Consequences
+- **Positive**: Steady 20.0 TPS, minimal RAM usage, instantaneous local teleports, simplified server administration.
+- **Negative / Constraints**: Exactly one concurrent match per server instance.

@@ -45,3 +45,14 @@
 ## 5. Стиль кода
 - Комментарии в коде — лаконичные и исключительно на английском языке.
 - Явная обработка ошибок и краевых случаев (отключение игрока, падение ниже лимита мира, пустой список лута).
+
+## 6. Навигация и документация
+- **Глобальные стандарты**: `/root/.gemini/config/rules/` (`00-environment.md`, `10-project-structure.md`, `20-code-standards.md`).
+- **Живая архитектура**: [`docs/architecture/`](docs/architecture/) (`overview.md`, `fsm-lifecycle.md`, `procedural-arena.md`, и др.).
+- **Архитектурные решения**: [`docs/adr/`](docs/adr/) (`0001-single-void-world.md`, `0002-fawe-async-reset.md`, `0003-navigable-map-loot-distribution.md`).
+- **Планы и дорожная карта**: [`docs/plans/`](docs/plans/) (`roadmap.md`).
+- **Идеи и бэклог**: [`docs/ideas/`](docs/ideas/) (`backlog.md`).
+- **Гайды по установке и настройке**:
+  - English: [`docs/en/installation.md`](docs/en/installation.md), [`docs/en/configuration.md`](docs/en/configuration.md).
+  - Русский: [`docs/ru/installation.md`](docs/ru/installation.md), [`docs/ru/configuration.md`](docs/ru/configuration.md).
+
