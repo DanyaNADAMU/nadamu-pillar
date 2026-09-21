@@ -29,7 +29,7 @@ In **Pillars of Fortune**, players spawn atop isolated pillars hovering over an 
 ## Quickstart & Installation
 
 1. Install **FastAsyncWorldEdit (FAWE)** into your server's `plugins/` directory.
-2. Build or download `NadamuPillar-1.0-SNAPSHOT.jar` and place it into `plugins/`.
+2. Download the latest `NadamuPillar-1.0.0.jar` from [GitHub Releases](https://github.com/DanyaNADAMU/nadamu-pillar/releases) (or build from source) and place it into `plugins/`.
 3. Configure your server to use a **Void World** and disable Nether and The End for optimal performance.
 4. Start your server.
 
@@ -60,10 +60,10 @@ cd nadamu-pillar
 ./gradlew check
 ./gradlew test
 
-# Build production jar
-./gradlew build
+# Build production jar (optional -Pversion=X.Y.Z, defaults to 1.0-SNAPSHOT)
+./gradlew build -Pversion=1.0.0
 ```
-The compiled jar will be available in `build/libs/NadamuPillar-1.0-SNAPSHOT.jar`.
+The compiled jar will be available in `build/libs/NadamuPillar-1.0.0.jar`.
 
 ---
 
@@ -71,8 +71,10 @@ The compiled jar will be available in `build/libs/NadamuPillar-1.0-SNAPSHOT.jar`
 
 - [Installation & Setup Guide (EN)](docs/en/installation.md)
 - [Configuration Reference (EN)](docs/en/configuration.md)
+- [Release Management & CI/CD (EN)](docs/en/releases.md)
 - [Руководство по установке (RU)](docs/ru/installation.md)
 - [Справочник конфигурации (RU)](docs/ru/configuration.md)
+- [Выпуск релизов и CI/CD (RU)](docs/ru/releases.md)
 - [Architecture Overview](docs/architecture/overview.md)
 - [Architecture Decision Records (ADRs)](docs/adr/)
 - [Development Plans & Roadmap](docs/plans/roadmap.md)

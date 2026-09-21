@@ -29,7 +29,7 @@
 ## Быстрый старт и установка
 
 1. Поместите плагин **FastAsyncWorldEdit (FAWE)** в папку `plugins/` вашего сервера.
-2. Скомпилируйте или скачайте `NadamuPillar-1.0-SNAPSHOT.jar` и поместите в папку `plugins/`.
+2. Скачайте последнюю версию `NadamuPillar-1.0.0.jar` со страницы [GitHub Releases](https://github.com/DanyaNADAMU/nadamu-pillar/releases) (или соберите из исходников) и поместите в папку `plugins/`.
 3. Настройте сервер на использование **пустотного мира (Void World)** и отключите Ад и Край для максимальной производительности.
 4. Запустите сервер.
 
@@ -60,10 +60,10 @@ cd nadamu-pillar
 ./gradlew check
 ./gradlew test
 
-# Сборка готового плагина
-./gradlew build
+# Сборка готового плагина (опционально -Pversion=X.Y.Z, по умолчанию 1.0-SNAPSHOT)
+./gradlew build -Pversion=1.0.0
 ```
-Готовый JAR-файл будет находиться по пути `build/libs/NadamuPillar-1.0-SNAPSHOT.jar`.
+Готовый JAR-файл будет находиться по пути `build/libs/NadamuPillar-1.0.0.jar`.
 
 ---
 
@@ -71,8 +71,10 @@ cd nadamu-pillar
 
 - [Руководство по установке (RU)](docs/ru/installation.md)
 - [Справочник конфигурации (RU)](docs/ru/configuration.md)
+- [Выпуск релизов и CI/CD (RU)](docs/ru/releases.md)
 - [Installation & Setup Guide (EN)](docs/en/installation.md)
 - [Configuration Reference (EN)](docs/en/configuration.md)
+- [Release Management & CI/CD (EN)](docs/en/releases.md)
 - [Обзор архитектуры (EN)](docs/architecture/overview.md)
 - [Архитектурные решения (ADR, EN)](docs/adr/)
 - [План разработки и дорожная карта (EN)](docs/plans/roadmap.md)

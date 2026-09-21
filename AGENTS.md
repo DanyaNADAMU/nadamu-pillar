@@ -53,6 +53,6 @@
 - **Планы и дорожная карта**: [`docs/plans/`](docs/plans/) (`roadmap.md`).
 - **Идеи и бэклог**: [`docs/ideas/`](docs/ideas/) (`backlog.md`).
 - **Гайды по установке и настройке**:
-  - English: [`docs/en/installation.md`](docs/en/installation.md), [`docs/en/configuration.md`](docs/en/configuration.md).
-  - Русский: [`docs/ru/installation.md`](docs/ru/installation.md), [`docs/ru/configuration.md`](docs/ru/configuration.md).
+  - English: [`docs/en/installation.md`](docs/en/installation.md), [`docs/en/configuration.md`](docs/en/configuration.md), [`docs/en/releases.md`](docs/en/releases.md).
+  - Русский: [`docs/ru/installation.md`](docs/ru/installation.md), [`docs/ru/configuration.md`](docs/ru/configuration.md), [`docs/ru/releases.md`](docs/ru/releases.md).
 

@@ -33,11 +33,13 @@ This document tracks milestones, completed deliverables, and ongoing tasks for *
 
 ---
 
-## Phase 4: UI, Commands, Testing & Packaging
+## Phase 4: UI, Commands, Testing, Packaging & Release
 - [x] Style all UI elements using MiniMessage (ActionBars, Titles, Chat messages).
 - [x] Implement administrative commands: `/pillars start`, `/pillars stop`, `/pillars status`, `/pillars forcenext` with TabCompleter.
 - [x] Comprehensive unit test suite covering FSM, protection, void tracking, loot, parser, scheduler, disasters, and commands (23/23 tests passing).
-- [x] Build compatible Java 21 LTS release jar (`NadamuPillar-1.0-SNAPSHOT.jar`).
+- [x] Configure CI/CD pipelines in GitHub Actions (`.github/workflows/ci.yml` and `.github/workflows/release.yml`).
+- [x] Implement dynamic versioning in `build.gradle.kts` via Gradle properties (`-Pversion=...`).
+- [x] Publish initial production release `v1.0.0` with automated GitHub Release notes and attached artifact (`NadamuPillar-1.0.0.jar`).
 
 ---
 
