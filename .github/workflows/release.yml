@@ -1,0 +1,65 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      tag_name:
+        description: 'Tag name to release (e.g. v1.0.0)'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build & Publish Release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Determine release version and tag
+        id: vars
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            TAG="${{ inputs.tag_name }}"
+          else
+            TAG="${{ github.ref_name }}"
+          fi
+          # Strip leading 'v' if present for gradle version
+          VERSION="${TAG#v}"
+          echo "RELEASE_TAG=${TAG}" >> $GITHUB_ENV
+          echo "RELEASE_VERSION=${VERSION}" >> $GITHUB_ENV
+          echo "Selected tag: ${TAG}, version: ${VERSION}"
+
+      - name: Set up Java 21 (Amazon Corretto)
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'corretto'
+          java-version: '21'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Run verification checks
+        run: ./gradlew check test
+
+      - name: Build plugin jar with release version
+        run: ./gradlew build -Pversion=${{ env.RELEASE_VERSION }}
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.RELEASE_TAG }}
+          name: Release ${{ env.RELEASE_TAG }}
+          generate_release_notes: true
+          files: build/libs/*.jar
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

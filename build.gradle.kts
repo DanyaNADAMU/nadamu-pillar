@@ -4,7 +4,9 @@ plugins {
 }
 
 group = "space.nadamu"
-version = "1.0-SNAPSHOT"
+version = project.findProperty("pluginVersion")?.toString()
+    ?: project.findProperty("version")?.toString()?.takeIf { it != "unspecified" }
+    ?: "1.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
