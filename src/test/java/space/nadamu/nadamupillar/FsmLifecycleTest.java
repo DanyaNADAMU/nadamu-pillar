@@ -142,4 +142,30 @@ class FsmLifecycleTest {
 
         assertEquals("WAITING", gameManager.getCurrentState().getName());
     }
+
+    @Test
+    @DisplayName("WAITING does not auto-start when autoStartEnabled is false")
+    void testWaitingDoesNotAutoStartWhenDisabled() {
+        Player p1 = server.addPlayer("Alice");
+        Player p2 = server.addPlayer("Bob");
+        playerRegistry.register(p1, PlayerRole.SPECTATOR);
+        playerRegistry.register(p2, PlayerRole.SPECTATOR);
+
+        gameManager.setAutoStartEnabled(false);
+
+        // Tick 40 times (2 seconds)
+        for (int i = 0; i < 40; i++) {
+            gameManager.tick();
+        }
+
+        assertEquals("WAITING", gameManager.getCurrentState().getName(), "Should remain in WAITING when auto-start is disabled");
+
+        // Enable auto-start and tick
+        gameManager.setAutoStartEnabled(true);
+        for (int i = 0; i < 25; i++) {
+            gameManager.tick();
+        }
+
+        assertEquals("STARTING", gameManager.getCurrentState().getName(), "Should transition to STARTING when auto-start is enabled");
+    }
 }

@@ -30,7 +30,7 @@ Edit `server.properties` in your server root:
 ```properties
 level-name=world
 level-type=minecraft\:flat
-generator-settings={"layers":[],"biome":"minecraft:the_void"}
+generator-settings={"biome"\:"minecraft\:the_void","layers"\:[{"block"\:"minecraft\:air","height"\:1}]}
 generate-structures=false
 spawn-animals=false
 spawn-monsters=false
@@ -39,7 +39,11 @@ difficulty=normal
 pvp=true
 ```
 > [!IMPORTANT]
-> If you already have an existing `world/` directory with generated terrain, stop the server, delete or rename the `world/` folder, update `server.properties` as shown above, and start the server. A clean void world will be generated automatically.
+> If the server was already started and `world/` or `world_nether/` folders exist on disk, Paper **will not** regenerate the world from scratch.
+> Make sure to:
+> 1. Stop the server (`docker compose stop pillar`).
+> 2. Delete the `world/` and `world_nether/` directories.
+> 3. Update `server.properties` and start the server again. A clean void world will be generated automatically.
 
 #### Method B: Using Void World Generators
 Alternatively, you can use a void generator plugin (such as *VoidGen* or *CleanroomGenerator*) or place a pre-made void world save into the server root.

@@ -65,21 +65,42 @@ class PillarsCommandTest {
     }
 
     @Test
-    @DisplayName("Command /pillars stop transitions state to WAITING")
+    @DisplayName("Command /pillars stop transitions state to WAITING and disables autostart")
     void testCommandStop() {
         PlayerMock admin = server.addPlayer();
         admin.setOp(true);
 
         gameManager.startMatch(5);
         assertEquals("STARTING", gameManager.getCurrentState().getName());
+        assertTrue(gameManager.isAutoStartEnabled());
 
         boolean result = command.onCommand(admin, null, "pillars", new String[]{"stop"});
         assertTrue(result);
         assertEquals("WAITING", gameManager.getCurrentState().getName());
+        assertFalse(gameManager.isAutoStartEnabled(), "Auto-start should be disabled after /pillars stop");
     }
 
     @Test
-    @DisplayName("Tab completion suggests subcommands")
+    @DisplayName("Command /pillars autostart toggles and sets autostart state")
+    void testCommandAutostart() {
+        PlayerMock admin = server.addPlayer();
+        admin.setOp(true);
+
+        // Turn off
+        command.onCommand(admin, null, "pillars", new String[]{"autostart", "off"});
+        assertFalse(gameManager.isAutoStartEnabled());
+
+        // Turn on
+        command.onCommand(admin, null, "pillars", new String[]{"autostart", "on"});
+        assertTrue(gameManager.isAutoStartEnabled());
+
+        // Toggle
+        command.onCommand(admin, null, "pillars", new String[]{"autostart", "toggle"});
+        assertFalse(gameManager.isAutoStartEnabled());
+    }
+
+    @Test
+    @DisplayName("Tab completion suggests subcommands including autostart")
     void testTabCompletion() {
         PlayerMock admin = server.addPlayer();
         admin.setOp(true);
@@ -88,7 +109,14 @@ class PillarsCommandTest {
         assertNotNull(completions);
         assertTrue(completions.contains("start"));
         assertTrue(completions.contains("stop"));
+        assertTrue(completions.contains("autostart"));
         assertTrue(completions.contains("status"));
         assertTrue(completions.contains("forcenext"));
+
+        List<String> autoCompletions = command.onTabComplete(admin, null, "pillars", new String[]{"autostart", ""});
+        assertNotNull(autoCompletions);
+        assertTrue(autoCompletions.contains("on"));
+        assertTrue(autoCompletions.contains("off"));
+        assertTrue(autoCompletions.contains("toggle"));
     }
 }

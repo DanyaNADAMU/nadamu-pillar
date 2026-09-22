@@ -101,7 +101,9 @@ public class ActiveState implements GameState {
         }
 
         // 4. Initialize action scheduler for loot and disaster timers
-        this.actionScheduler = new ActionScheduler(playerRegistry, lootService, disasterManager, arenaService);
+        int lootInterval = gameManager != null ? gameManager.getLootIntervalSeconds() : 5;
+        int disasterInterval = gameManager != null ? gameManager.getDisasterIntervalSeconds() : 30;
+        this.actionScheduler = new ActionScheduler(playerRegistry, lootService, disasterManager, arenaService, lootInterval, disasterInterval);
 
         checkEndCondition();
     }
@@ -129,7 +131,8 @@ public class ActiveState implements GameState {
             if (!alivePlayers.isEmpty()) {
                 winner = alivePlayers.iterator().next();
             }
-            gameManager.transitionTo(new EndingState(gameManager, playerRegistry, arenaService, winner, 7));
+            int celebrationSec = gameManager != null ? gameManager.getCelebrationSeconds() : 7;
+            gameManager.transitionTo(new EndingState(gameManager, playerRegistry, arenaService, winner, celebrationSec));
         }
     }
 

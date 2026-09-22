@@ -31,15 +31,23 @@ public final class PillarsPlugin extends JavaPlugin {
         // 1. Dependency Injection setup
         this.playerRegistry = new PlayerRegistry();
         this.mapManager = new MapManager(getDataFolder(), getLogger());
-        this.mapManager.loadMaps();
+        this.mapManager.loadMaps(getConfig().getString("game.default-map", "classic_bedrock"));
         this.arenaService = new ProceduralArenaService(mapManager);
         this.lootService = new LootService(getDataFolder(), getLogger());
         this.lootService.loadLoot();
         this.disasterManager = new DisasterManager(getLogger());
         this.gameManager = new GameManager(playerRegistry, arenaService, lootService, disasterManager, getLogger());
 
+        this.gameManager.setMinPlayers(getConfig().getInt("game.min-players", 2));
+        this.gameManager.setCountdownSeconds(getConfig().getInt("game.countdown-seconds", 5));
+        this.gameManager.setCelebrationSeconds(getConfig().getInt("game.celebration-seconds", 7));
+        this.gameManager.setLootIntervalSeconds(getConfig().getInt("game.loot-interval-seconds", 5));
+        this.gameManager.setDisasterIntervalSeconds(getConfig().getInt("game.disaster-interval-seconds", 30));
+        this.gameManager.setAutoStartEnabled(getConfig().getBoolean("game.auto-start", true));
+
         // 2. Register all listeners once at startup
-        getServer().getPluginManager().registerEvents(new VoidTrackingListener(gameManager, playerRegistry, arenaService), this);
+        double voidDeathY = getConfig().getDouble("world.void-death-y", -70.0);
+        getServer().getPluginManager().registerEvents(new VoidTrackingListener(gameManager, playerRegistry, arenaService, voidDeathY), this);
         getServer().getPluginManager().registerEvents(new GameProtectionListener(gameManager), this);
         getServer().getPluginManager().registerEvents(new PlayerConnectionListener(gameManager, playerRegistry, arenaService), this);
 
@@ -51,10 +59,29 @@ public final class PillarsPlugin extends JavaPlugin {
             command.setTabCompleter(pillarsCommand);
         }
 
-        // 4. Start main game tick loop
+        // 4. Check dependencies (FAWE)
+        checkDependencies();
+
+        // 5. Start main game tick loop
         this.tickTask = getServer().getScheduler().runTaskTimer(this, gameManager::tick, 1L, 1L);
 
         getLogger().info("Pillars of Fortune (nadamu-pillar) has been successfully enabled!");
+    }
+
+    private void checkDependencies() {
+        boolean hasFawe = getServer().getPluginManager().getPlugin("FastAsyncWorldEdit") != null
+                || getServer().getPluginManager().getPlugin("WorldEdit") != null;
+        if (!hasFawe) {
+            getLogger().warning("====================================================");
+            getLogger().warning(" FastAsyncWorldEdit (FAWE) is NOT installed!");
+            getLogger().warning(" FAWE is required for asynchronous arena generation and resets.");
+            getLogger().warning(" Without FAWE, block operations will run on the main thread,");
+            getLogger().warning(" which may cause noticeable lag spikes during arena build/reset.");
+            getLogger().warning(" Download FAWE: https://intellectualsites.github.io/download/fawe.html");
+            getLogger().warning("====================================================");
+        } else {
+            getLogger().info("FastAsyncWorldEdit (FAWE) integration detected.");
+        }
     }
 
     @Override

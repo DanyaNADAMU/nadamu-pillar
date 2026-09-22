@@ -109,26 +109,30 @@ public class MapConfig {
         );
     }
 
-    public static MapConfig createDefault() {
+    public static MapConfig createBedrockDefault() {
         return new MapConfig(
-                "classic_neon",
-                "<aqua><bold>Неоновый Октагон</bold></aqua>",
+                "classic_bedrock",
+                "<gray><bold>Classic Bedrock</bold></gray>",
                 "world",
-                90,
+                100,
                 14.0,
-                3,
-                15,
-                "70%light_gray_concrete,30%cyan_terracotta",
-                "80%gray_concrete,20%cyan_concrete",
+                1,
+                5,
+                "BEDROCK",
+                "BEDROCK",
                 Material.BEDROCK,
-                true,
-                5.5,
-                -3,
-                "60%light_blue_concrete,40%cyan_concrete",
-                true,
-                "70%sea_lantern,30%cyan_concrete",
-                List.of("meteor_shower", "anvil_rain", "ghast_assault", "wind_charge_storm")
+                false,
+                0.0,
+                0,
+                "AIR",
+                false,
+                "AIR",
+                List.of("meteor_shower", "anvil_rain", "ghast_assault", "wind_charge_storm", "levitation_wave")
         );
+    }
+
+    public static MapConfig createDefault() {
+        return createBedrockDefault();
     }
 
     public String getId() { return id; }

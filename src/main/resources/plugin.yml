@@ -5,8 +5,9 @@ api-version: '1.21'
 prefix: PillarsOfFortune
 authors: [ nadamu ]
 description: Pillars of Fortune minigame
+softdepend: [FastAsyncWorldEdit]
 commands:
   pillars:
     description: Main command for Pillars of Fortune
     permission: nadamupillar.admin
-    usage: /pillars <start|stop|forcenext>
+    usage: /pillars <start|stop|autostart|forcenext|status>

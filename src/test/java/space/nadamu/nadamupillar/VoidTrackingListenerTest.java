@@ -91,4 +91,25 @@ class VoidTrackingListenerTest {
         assertEquals(PlayerRole.SPECTATOR, gp.getRole());
         assertEquals(GameMode.SPECTATOR, player.getGameMode());
     }
+
+    @Test
+    @DisplayName("Default void threshold is -70.0")
+    void testDefaultVoidThreshold70() {
+        VoidTrackingListener defaultListener = new VoidTrackingListener(gameManager, playerRegistry, arenaService);
+        Player player = server.addPlayer("DeepDiver");
+        GamePlayer gp = playerRegistry.register(player, PlayerRole.ALIVE);
+
+        // At -65, player is still above -70
+        Location from = new Location(player.getWorld(), 0, -60, 0);
+        Location toSafe = new Location(player.getWorld(), 0, -65, 0);
+        PlayerMoveEvent safeMove = new PlayerMoveEvent(player, from, toSafe);
+        defaultListener.onPlayerMove(safeMove);
+        assertTrue(gp.isAlive(), "Player should survive at Y=-65 with -70 threshold");
+
+        // Below -70
+        Location toVoid = new Location(player.getWorld(), 0, -71, 0);
+        PlayerMoveEvent voidMove = new PlayerMoveEvent(player, toSafe, toVoid);
+        defaultListener.onPlayerMove(voidMove);
+        assertFalse(gp.isAlive(), "Player should be eliminated below -70");
+    }
 }

@@ -29,24 +29,20 @@ public class MapManager {
     }
 
     public void loadMaps() {
+        loadMaps(null);
+    }
+
+    public void loadMaps(String defaultMapId) {
         maps.clear();
 
         if (!mapsFolder.exists()) {
             mapsFolder.mkdirs();
         }
 
-        File[] files = mapsFolder.listFiles((dir, name) -> name.endsWith(".yml") || name.endsWith(".yaml"));
-        if (files == null || files.length == 0) {
-            try (var stream = getClass().getClassLoader().getResourceAsStream("maps/classic_neon.yml")) {
-                if (stream != null) {
-                    File target = new File(mapsFolder, "classic_neon.yml");
-                    Files.copy(stream, target.toPath());
-                }
-            } catch (Exception ignored) {
-            }
-            files = mapsFolder.listFiles((dir, name) -> name.endsWith(".yml") || name.endsWith(".yaml"));
-        }
+        copyResourceIfMissing("maps/classic_bedrock.yml", "classic_bedrock.yml");
+        copyResourceIfMissing("maps/classic_neon.yml", "classic_neon.yml");
 
+        File[] files = mapsFolder.listFiles((dir, name) -> name.endsWith(".yml") || name.endsWith(".yaml"));
         if (files == null || files.length == 0) {
             // Create default map file
             MapConfig def = MapConfig.createDefault();
@@ -74,7 +70,25 @@ public class MapManager {
             maps.put(def.getId(), def);
         }
 
-        currentMap = maps.values().iterator().next();
+        if (defaultMapId != null && maps.containsKey(defaultMapId.toLowerCase())) {
+            currentMap = maps.get(defaultMapId.toLowerCase());
+        } else if (maps.containsKey("classic_bedrock")) {
+            currentMap = maps.get("classic_bedrock");
+        } else {
+            currentMap = maps.values().iterator().next();
+        }
+    }
+
+    private void copyResourceIfMissing(String resourcePath, String targetFileName) {
+        File target = new File(mapsFolder, targetFileName);
+        if (!target.exists()) {
+            try (var stream = getClass().getClassLoader().getResourceAsStream(resourcePath)) {
+                if (stream != null) {
+                    Files.copy(stream, target.toPath());
+                }
+            } catch (Exception ignored) {
+            }
+        }
     }
 
     private void saveDefaultMapYaml(MapConfig config) {

@@ -35,7 +35,7 @@
 ```properties
 level-name=world
 level-type=minecraft\:flat
-generator-settings={"layers":[],"biome":"minecraft:the_void"}
+generator-settings={"biome"\:"minecraft\:the_void","layers"\:[{"block"\:"minecraft\:air","height"\:1}]}
 generate-structures=false
 spawn-animals=false
 spawn-monsters=false
@@ -44,7 +44,11 @@ difficulty=normal
 pvp=true
 ```
 > [!IMPORTANT]
-> Если у вас уже сгенерирован старый мир в папке `world/`, обязательно остановите сервер, удалите папку `world/` (или переименуйте её), обновите `server.properties` и запустите сервер снова. Будет создан чистый пустотный мир.
+> Если сервер уже запускался и папка `world/` или `world_nether/` уже существует на диске, Paper **не станет** перегенерировать мир заново.
+> Обязательно:
+> 1. Остановите сервер (`docker compose stop pillar`).
+> 2. Удалите папки `world/` и `world_nether/`.
+> 3. Обновите `server.properties` и запустите сервер снова. Будет создан чистый пустотный мир.
 
 #### Способ 2: Использование плагинов-генераторов пустоты
 Вы также можете использовать специализированные плагины генерации пустоты (например, *VoidGen* или *CleanroomGenerator*) либо подложить готовый архив пустотной карты в папку `world/`.

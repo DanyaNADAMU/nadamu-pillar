@@ -38,7 +38,7 @@ public class VoidTrackingListener implements Listener {
     }
 
     public VoidTrackingListener(GameManager gameManager, PlayerRegistry playerRegistry, ArenaService arenaService) {
-        this(gameManager, playerRegistry, arenaService, -10.0);
+        this(gameManager, playerRegistry, arenaService, -70.0);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)

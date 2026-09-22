@@ -1,0 +1,35 @@
+# ==========================================================
+# Classic Bedrock Map Configuration (CubeCraft style 1x1)
+# ==========================================================
+name: "<gray><bold>Classic Bedrock</bold></gray>"
+world: "world"
+
+geometry:
+  # Base Y level for the pillar surfaces
+  y-level: 100
+  # Distance in blocks between adjacent player pillars
+  distance-between-players: 14.0
+
+pillars:
+  # Size of player pillar (1 for 1x1)
+  size: 1
+  # Depth of pillar downward from surface
+  depth: 5
+  # Surface block pattern
+  surface: "BEDROCK"
+  # Body block pattern
+  body: "BEDROCK"
+  # Bottom tip block
+  bottom: "BEDROCK"
+
+center:
+  # No central island
+  enabled: false
+
+features:
+  allowed-disasters:
+    - "meteor_shower"
+    - "anvil_rain"
+    - "ghast_assault"
+    - "wind_charge_storm"
+    - "levitation_wave"

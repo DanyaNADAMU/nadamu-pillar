@@ -11,15 +11,19 @@ game:
   # Duration in seconds for winner to celebrate before arena resets
   celebration-seconds: 7
   # Interval in seconds between giving random loot to players
-  loot-interval-seconds: 10
+  loot-interval-seconds: 5
   # Interval in seconds between random arena disasters
   disaster-interval-seconds: 30
   # Warning countdown in seconds before a disaster strikes
   disaster-warning-seconds: 5
+  # Automatically start match when min-players is reached
+  auto-start: true
+  # Default map ID to load at startup
+  default-map: "classic_bedrock"
 
 # World settings
 world:
   # Default void world name
   name: "world"
   # Height at which player drops are intercepted as fatal falls
-  void-death-y: -10
+  void-death-y: -70

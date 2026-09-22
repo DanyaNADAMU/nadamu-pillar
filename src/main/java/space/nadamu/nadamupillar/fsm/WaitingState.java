@@ -37,8 +37,8 @@ public class WaitingState implements GameState {
     public void onTick(int currentTick) {
         // Check if sufficient players are online to start automatically every 20 ticks
         if (currentTick % 20 == 0) {
-            if (playerRegistry.getTotalCount() >= minPlayers) {
-                gameManager.transitionTo(new StartingState(gameManager, playerRegistry, gameManager.getArenaService(), 5, minPlayers));
+            if (gameManager.isAutoStartEnabled() && playerRegistry.getTotalCount() >= minPlayers) {
+                gameManager.transitionTo(new StartingState(gameManager, playerRegistry, gameManager.getArenaService(), gameManager.getCountdownSeconds(), minPlayers));
             }
         }
     }

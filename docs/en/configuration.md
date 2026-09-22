@@ -1,12 +1,12 @@
 # Configuration Reference
 
-This document explains all configuration options and customization files in **Pillars of Fortune** (`nadamu-pillar`).
+This document explains all configuration options, maps, loot systems, and administrative commands in **Pillars of Fortune** (`nadamu-pillar`).
 
 ---
 
 ## 1. Main Configuration: `plugins/NadamuPillar/config.yml`
 
-The `config.yml` file governs game flow, timers, and the global world reference.
+The `config.yml` file governs game flow, timers, auto-start behavior, and the global world reference.
 
 ```yaml
 # ==========================================================
@@ -15,7 +15,6 @@ The `config.yml` file governs game flow, timers, and the global world reference.
 
 game:
   # Minimum number of players required to trigger the STARTING countdown.
-  # If the count drops below this during the countdown, the timer cancels.
   min-players: 2
 
   # Countdown duration in seconds before the match begins.
@@ -25,8 +24,8 @@ game:
   # before the arena is cleaned up and players return to WAITING state.
   celebration-seconds: 7
 
-  # Periodic interval in seconds for giving random weighted loot to alive players.
-  loot-interval-seconds: 10
+  # Periodic interval in seconds for giving random loot to alive players.
+  loot-interval-seconds: 5
 
   # Interval in seconds between random arena disasters.
   disaster-interval-seconds: 30
@@ -34,25 +33,34 @@ game:
   # Warning duration in seconds displayed via Title before a disaster strikes.
   disaster-warning-seconds: 5
 
+  # Automatically start match when min-players is reached.
+  # Calling /pillars stop automatically turns this off.
+  auto-start: true
+
+  # Default map ID loaded upon startup.
+  default-map: "classic_bedrock"
+
 world:
   # Name of the single void world where all matches and spectators reside.
   name: "world"
 
-  # Y-coordinate threshold. Falling below this value triggers instant
-  # elimination, converting the player to a spectator without the death screen.
-  void-death-y: -10
+  # Y-coordinate threshold. In modern Minecraft (1.18+), building extends to -64.
+  # Falling below -70 triggers instant elimination without the death screen.
+  void-death-y: -70
 ```
 
 ---
 
 ## 2. Map Configuration: `plugins/NadamuPillar/maps/*.yml`
 
-Maps define the visual style, pillar dimensions, central platform layout, and disaster whitelist. The default map is `classic_neon.yml`.
+Maps define pillar dimensions, block patterns, and the allowed disasters list.
+The plugin includes two built-in maps:
+* `classic_bedrock.yml` — classic $1 \times 1$ bedrock pillars without a center island.
+* `classic_neon.yml` — modern $3 \times 3$ neon concrete pillars with a central platform.
 
-### Example Map (`maps/classic_neon.yml`):
+### Example Map `classic_bedrock.yml` ($1 \times 1$, no center):
 ```yaml
-# MiniMessage formatted display name for titles and chat
-name: "<gradient:blue:light_purple>Classic Neon</gradient>"
+name: "<gray><bold>Classic Bedrock</bold></gray>"
 world: "world"
 
 geometry:
@@ -62,30 +70,18 @@ geometry:
   distance-between-players: 14.0
 
 pillars:
-  # Pillar footprint (e.g., 3 creates a 3x3 column)
-  size: 3
+  # Pillar footprint (1 creates a 1x1 column)
+  size: 1
   # Depth of pillar downward from surface
-  depth: 6
-  # Surface block pattern (supports single block or WorldEdit-like percentages)
-  surface: "60%light_blue_concrete,40%cyan_concrete"
-  # Body block pattern
-  body: "70%cyan_concrete,30%blue_concrete"
-  # Bottom tip block
-  bottom: "OBSIDIAN"
+  depth: 5
+  # Surface, body, and bottom block patterns
+  surface: "BEDROCK"
+  body: "BEDROCK"
+  bottom: "BEDROCK"
 
 center:
-  # Whether to generate a central island
-  enabled: true
-  # Radius in blocks from arena center
-  radius: 6.0
-  # Vertical offset relative to pillar surface Y (e.g., -2 is 2 blocks lower)
-  y-offset: -2
-  # Fill pattern of the center platform
-  pattern: "50%magenta_concrete,50%purple_concrete"
-  rim:
-    # Outer decorative rim
-    enabled: true
-    pattern: "70%yellow_concrete,30%gold_block"
+  # Central island disabled
+  enabled: false
 
 features:
   # List of allowed disasters for this map
@@ -97,15 +93,60 @@ features:
     - "levitation_wave"
 ```
 
-### Pattern Syntax (`BlockPatternParser`):
-The plugin uses a weighted percentage syntax for procedural block generation:
-- Single material: `"STONE"` or `"OBSIDIAN"`
-- Weighted palette: `"60%light_blue_concrete,40%cyan_concrete"`
-- Multi-block blend: `"50%magenta_concrete,30%purple_concrete,20%crying_obsidian"`
+---
+
+## 3. Loot Configuration: `plugins/NadamuPillar/loot.yml`
+
+The loot system uses a **Default Policy (`defaults`)** and **Overrides (`items`)** architecture:
+
+```yaml
+defaults:
+  # true  = dynamic loot (all Minecraft items drop, except items with enabled: false)
+  # false = whitelist mode (only items with explicit enabled: true drop)
+  enabled: true
+  weight: 10.0
+  stack-1: 1          # items with maxStackSize 1 (shield, bucket, tools)
+  stack-16:           # items with maxStackSize 16 (pearls, snowballs, eggs)
+    min: 1
+    max: 2
+  stack-64:           # items with maxStackSize 64 (blocks, arrows, food)
+    min: 1
+    max: 2
+
+items:
+  # 1. Disabled items (cannot place or use in Survival)
+  COMMAND_BLOCK:
+    enabled: false
+  BARRIER:
+    enabled: false
+  ENDER_DRAGON_SPAWN_EGG:
+    enabled: false
+
+  # 2. Weight and amount overrides
+  SNOWBALL:
+    weight: 25.0
+    min: 2
+    max: 3
+  SHIELD:
+    weight: 20.0
+  MACE:
+    weight: 18.0
+  BREEZE_ROD:
+    weight: 15.0
+    max: 1
+  HAY_BLOCK:
+    weight: 20.0
+    min: 1
+    max: 2
+```
+
+### Behavior:
+* Missing properties in `items` inherit from `defaults`.
+* When `defaults.enabled: false`, an item is only added to the pool if it explicitly sets `enabled: true`.
 
 ---
 
-## 3. Disasters Reference
+## 4. Disasters Reference
 
 | Disaster ID | Name | Description |
 |---|---|---|
@@ -117,11 +158,12 @@ The plugin uses a weighted percentage syntax for procedural block generation:
 
 ---
 
-## 4. Commands & Administration
+## 5. Commands & Administration
 
 All administrative commands require the `nadamupillar.admin` permission:
 
-- `/pillars start`: Force-starts the countdown (or begins the game immediately if in `STARTING`).
-- `/pillars stop`: Stops the current match, removes arena blocks, and resets game state to `WAITING`.
-- `/pillars status`: Prints current state, registered player count, and alive players.
-- `/pillars forcenext`: Immediately triggers a random disaster from the map's allowed list.
+- `/pillars start [seconds]`: Starts the match with a countdown.
+- `/pillars stop`: Stops the match, clears arena blocks, sets all players to spectators, and **disables auto-start**.
+- `/pillars autostart <on|off|toggle>`: Toggles or sets automatic match starting when enough players join.
+- `/pillars status`: Displays current state, auto-start status, and player counts.
+- `/pillars forcenext`: Skips countdown (in `STARTING`) or checks win conditions (in `ACTIVE`).

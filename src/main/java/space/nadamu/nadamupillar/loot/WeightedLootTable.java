@@ -48,6 +48,10 @@ public class WeightedLootTable<T> {
         return totalWeight;
     }
 
+    public synchronized java.util.Collection<T> getItems() {
+        return java.util.Collections.unmodifiableCollection(distribution.values());
+    }
+
     public synchronized void clear() {
         distribution.clear();
         totalWeight = 0.0;
