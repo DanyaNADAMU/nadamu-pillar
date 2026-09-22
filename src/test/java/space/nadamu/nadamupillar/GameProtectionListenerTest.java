@@ -110,4 +110,66 @@ class GameProtectionListenerTest {
 
         assertFalse(event.isCancelled(), "Block break should be allowed in ACTIVE state");
     }
+
+    @Test
+    @DisplayName("Placed blocks during ACTIVE state are tracked and cleared on arena reset")
+    void testPlacedBlocksTrackedAndCleared() {
+        Player p1 = server.addPlayer("Builder1");
+        Player p2 = server.addPlayer("Builder2");
+        playerRegistry.register(p1, PlayerRole.ALIVE);
+        playerRegistry.register(p2, PlayerRole.ALIVE);
+
+        gameManager.transitionTo(new ActiveState(gameManager, playerRegistry, arenaService));
+
+        Block block = p1.getWorld().getBlockAt(5, 100, 5);
+        block.setType(Material.COBBLESTONE);
+
+        // Fire BlockPlaceEvent
+        org.bukkit.event.block.BlockPlaceEvent placeEvent = new org.bukkit.event.block.BlockPlaceEvent(
+                block,
+                block.getState(),
+                p1.getWorld().getBlockAt(5, 99, 5),
+                new org.bukkit.inventory.ItemStack(Material.COBBLESTONE),
+                p1,
+                true,
+                org.bukkit.inventory.EquipmentSlot.HAND
+        );
+        server.getPluginManager().callEvent(placeEvent);
+
+        assertFalse(placeEvent.isCancelled());
+        assertTrue(arenaService.getModifiedBlocks().contains(block.getLocation()));
+
+        // Clear arena
+        arenaService.clearArena();
+
+        assertEquals(Material.AIR, block.getType(), "Placed cobblestone should be cleared to AIR");
+        assertTrue(arenaService.getModifiedBlocks().isEmpty());
+    }
+
+    @Test
+    @DisplayName("Flowing liquid during ACTIVE state is tracked and cleared on arena reset")
+    void testLiquidFlowTrackedAndCleared() {
+        Player p1 = server.addPlayer("Builder1");
+        Player p2 = server.addPlayer("Builder2");
+        playerRegistry.register(p1, PlayerRole.ALIVE);
+        playerRegistry.register(p2, PlayerRole.ALIVE);
+
+        gameManager.transitionTo(new ActiveState(gameManager, playerRegistry, arenaService));
+
+        Block fromBlock = p1.getWorld().getBlockAt(0, 100, 0);
+        fromBlock.setType(Material.WATER);
+        Block toBlock = p1.getWorld().getBlockAt(0, 99, 0);
+        toBlock.setType(Material.WATER);
+
+        org.bukkit.event.block.BlockFromToEvent flowEvent = new org.bukkit.event.block.BlockFromToEvent(
+                fromBlock, toBlock
+        );
+        server.getPluginManager().callEvent(flowEvent);
+
+        assertTrue(arenaService.getModifiedBlocks().contains(toBlock.getLocation()));
+
+        arenaService.clearArena();
+
+        assertEquals(Material.AIR, toBlock.getType(), "Flowing water should be cleared to AIR");
+    }
 }
